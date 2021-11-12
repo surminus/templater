@@ -42,10 +42,8 @@ func main() {
 		envvars[s[0]] = s[1]
 	}
 
-	args := []string{}
-	for _, arg := range os.Args[2:] {
-		args = append(args, arg)
-	}
+	var args []string
+	args = append(args, os.Args[2:]...)
 
 	data := Data{
 		Args:  args,
@@ -75,6 +73,9 @@ func main() {
 
 func (d Data) parseTemplate(t string) (out string, err error) {
 	tmpl, err := template.New(time.Now().String()).Parse(t)
+	if err != nil {
+		return out, err
+	}
 
 	b := new(bytes.Buffer)
 	err = tmpl.Execute(b, d)
